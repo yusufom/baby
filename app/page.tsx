@@ -5,6 +5,18 @@ import { Plus, ShoppingCart, CheckCircle, ExternalLink, Baby, Heart } from 'luci
 import { cn } from '@/lib/utils'
 import SampleData from '../components/SampleData'
 
+const CATEGORIES = [
+  'All',
+  'Feeding',
+  'Sleeping',
+  'Diapering',
+  'Baby Gear',
+  'Health & Safety',
+  'Bathing',
+  'Nursery & Decor',
+  'Clothing',
+]
+
 interface Item {
   id: string
   name: string
@@ -14,6 +26,7 @@ interface Item {
   imageUrl?: string
   isPurchased: boolean
   purchasedBy?: string
+  category: string
 }
 
 export default function Home() {
@@ -24,8 +37,12 @@ export default function Home() {
     description: '',
     amazonLink: '',
     price: '',
-    imageUrl: ''
+    imageUrl: '',
+    category: 'Feeding',
   })
+  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [sortBy, setSortBy] = useState('default')
+  const [filterPurchased, setFilterPurchased] = useState<'all' | 'purchased' | 'not_purchased'>('all')
 
   // Load items from localStorage on component mount
   useEffect(() => {
@@ -50,11 +67,12 @@ export default function Home() {
       amazonLink: newItem.amazonLink,
       price: newItem.price,
       imageUrl: newItem.imageUrl,
-      isPurchased: false
+      isPurchased: false,
+      category: newItem.category,
     }
 
     setItems([...items, item])
-    setNewItem({ name: '', description: '', amazonLink: '', price: '', imageUrl: '' })
+    setNewItem({ name: '', description: '', amazonLink: '', price: '', imageUrl: '', category: 'Feeding' })
     setShowAddForm(false)
   }
 
@@ -79,7 +97,8 @@ export default function Home() {
         amazonLink: 'https://www.amazon.com/dp/B08N5WRWNW',
         price: '$89.99',
         imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/71QKQ9mwV7L._AC_SL1500_.jpg',
-        isPurchased: false
+        isPurchased: false,
+        category: 'Health & Safety',
       },
       {
         id: '2',
@@ -88,7 +107,8 @@ export default function Home() {
         amazonLink: 'https://www.amazon.com/dp/B07FZ8S74R',
         price: '$45.99',
         imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/71QKQ9mwV7L._AC_SL1500_.jpg',
-        isPurchased: false
+        isPurchased: false,
+        category: 'Diapering',
       },
       {
         id: '3',
@@ -97,7 +117,8 @@ export default function Home() {
         amazonLink: 'https://www.amazon.com/dp/B00X4WHP5E',
         price: '$24.99',
         imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/71QKQ9mwV7L._AC_SL1500_.jpg',
-        isPurchased: false
+        isPurchased: false,
+        category: 'Feeding',
       },
       {
         id: '4',
@@ -106,7 +127,8 @@ export default function Home() {
         amazonLink: 'https://www.amazon.com/dp/B07FZ8S74R',
         price: '$199.99',
         imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/71QKQ9mwV7L._AC_SL1500_.jpg',
-        isPurchased: false
+        isPurchased: false,
+        category: 'Sleeping',
       },
       {
         id: '5',
@@ -115,10 +137,29 @@ export default function Home() {
         amazonLink: 'https://www.amazon.com/dp/B00X4WHP5E',
         price: '$34.99',
         imageUrl: 'https://images-na.ssl-images-amazon.com/images/I/71QKQ9mwV7L._AC_SL1500_.jpg',
-        isPurchased: false
+        isPurchased: false,
+        category: 'Clothing',
       }
     ]
     setItems(sampleItems)
+  }
+
+  // Filtering and sorting logic
+  let filteredItems = items
+  if (selectedCategory !== 'All') {
+    filteredItems = filteredItems.filter(item => item.category === selectedCategory)
+  }
+  if (filterPurchased === 'purchased') {
+    filteredItems = filteredItems.filter(item => item.isPurchased)
+  } else if (filterPurchased === 'not_purchased') {
+    filteredItems = filteredItems.filter(item => !item.isPurchased)
+  }
+  if (sortBy === 'price_asc') {
+    filteredItems = [...filteredItems].sort((a, b) => parseFloat(a.price.replace(/[^\d.]/g, '')) - parseFloat(b.price.replace(/[^\d.]/g, '')))
+  } else if (sortBy === 'price_desc') {
+    filteredItems = [...filteredItems].sort((a, b) => parseFloat(b.price.replace(/[^\d.]/g, '')) - parseFloat(a.price.replace(/[^\d.]/g, '')))
+  } else if (sortBy === 'name') {
+    filteredItems = [...filteredItems].sort((a, b) => a.name.localeCompare(b.name))
   }
 
   const purchasedCount = items.filter(item => item.isPurchased).length
@@ -162,6 +203,58 @@ export default function Home() {
         {items.length === 0 && (
           <SampleData onAddSampleData={addSampleData} />
         )}
+
+        {/* Category Tabs */}
+        <div className="flex flex-wrap gap-2 mb-6">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={cn(
+                'px-4 py-2 rounded-full font-medium transition-all duration-200',
+                selectedCategory === cat
+                  ? 'bg-gradient-to-r from-soft-blue to-soft-pink text-white shadow'
+                  : 'bg-white text-gray-700 baby-shadow hover:baby-shadow-hover'
+              )}
+            >
+              {cat}
+              {cat !== 'All' && (
+                <span className="ml-2 text-xs text-gray-400 font-normal">(
+                  {items.filter(item => item.category === cat).length}
+                )</span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* Filters & Sort */}
+        <div className="flex flex-wrap gap-4 mb-8 items-center">
+          <div>
+            <label className="mr-2 text-sm text-gray-600">Sort:</label>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+              className="px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-soft-blue"
+            >
+              <option value="default">Default</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="name">Name</option>
+            </select>
+          </div>
+          <div>
+            <label className="mr-2 text-sm text-gray-600">Show:</label>
+            <select
+              value={filterPurchased}
+              onChange={e => setFilterPurchased(e.target.value as any)}
+              className="px-3 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-soft-blue"
+            >
+              <option value="all">All</option>
+              <option value="not_purchased">Not Purchased</option>
+              <option value="purchased">Purchased</option>
+            </select>
+          </div>
+        </div>
 
         {/* Add Item Button */}
         <div className="mb-8 text-center">
@@ -214,6 +307,15 @@ export default function Home() {
                 onChange={(e) => setNewItem({...newItem, imageUrl: e.target.value})}
                 className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-soft-blue focus:border-transparent md:col-span-2"
               />
+              <select
+                value={newItem.category}
+                onChange={e => setNewItem({...newItem, category: e.target.value})}
+                className="px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-soft-blue focus:border-transparent"
+              >
+                {CATEGORIES.filter(c => c !== 'All').map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
             </div>
             <div className="flex gap-3 mt-4">
               <button
@@ -234,7 +336,7 @@ export default function Home() {
 
         {/* Items Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((item) => (
+          {filteredItems.map((item) => (
             <div
               key={item.id}
               className={cn(
@@ -265,6 +367,12 @@ export default function Home() {
                   <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 ml-2" />
                 )}
               </div>
+
+              {item.category && (
+                <span className="inline-block text-xs px-2 py-1 rounded-full bg-baby-blue text-gray-700 mb-2">
+                  {item.category}
+                </span>
+              )}
 
               {item.description && (
                 <p className="text-gray-600 mb-3 text-sm">
@@ -315,7 +423,7 @@ export default function Home() {
         </div>
 
         {/* Empty State */}
-        {items.length === 0 && (
+        {filteredItems.length === 0 && (
           <div className="text-center py-12">
             <Baby className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-500 mb-2">No items yet</h3>
