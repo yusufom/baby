@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface PurchaseLink {
     id?: string;
@@ -100,17 +100,21 @@ const markItemPurchased = async ({ id, data }: { id: string; data: PurchaseData 
 
 // Hook to fetch all items
 export const useItems = () => {
-    return useQuery('items', fetchItems);
+    return useQuery({
+        queryKey: ['items'],
+        queryFn: fetchItems
+    });
 };
 
 // Hook to create a new item
 export const useCreateItem = () => {
     const queryClient = useQueryClient();
 
-    return useMutation(createItem, {
+    return useMutation({
+        mutationFn: createItem,
         onSuccess: () => {
-            queryClient.invalidateQueries('items');
-        },
+            queryClient.invalidateQueries({ queryKey: ['items'] });
+        }
     });
 };
 
@@ -118,10 +122,11 @@ export const useCreateItem = () => {
 export const useUpdateItem = () => {
     const queryClient = useQueryClient();
 
-    return useMutation(updateItem, {
+    return useMutation({
+        mutationFn: updateItem,
         onSuccess: () => {
-            queryClient.invalidateQueries('items');
-        },
+            queryClient.invalidateQueries({ queryKey: ['items'] });
+        }
     });
 };
 
@@ -129,10 +134,11 @@ export const useUpdateItem = () => {
 export const useDeleteItem = () => {
     const queryClient = useQueryClient();
 
-    return useMutation(deleteItem, {
+    return useMutation({
+        mutationFn: deleteItem,
         onSuccess: () => {
-            queryClient.invalidateQueries('items');
-        },
+            queryClient.invalidateQueries({ queryKey: ['items'] });
+        }
     });
 };
 
@@ -140,9 +146,10 @@ export const useDeleteItem = () => {
 export const useMarkItemPurchased = () => {
     const queryClient = useQueryClient();
 
-    return useMutation(markItemPurchased, {
+    return useMutation({
+        mutationFn: markItemPurchased,
         onSuccess: () => {
-            queryClient.invalidateQueries('items');
-        },
+            queryClient.invalidateQueries({ queryKey: ['items'] });
+        }
     });
 }; 
