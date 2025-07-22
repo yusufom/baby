@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 interface PurchaseLink {
   id: string;
@@ -33,6 +34,8 @@ interface ItemCardProps {
 }
 
 export default function ItemCard({ item, onMarkPurchased }: ItemCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   // Calculate purchased quantity
   const purchasedQuantity = item.purchases.reduce(
     (sum, purchase) => sum + purchase.quantity,
@@ -47,19 +50,23 @@ export default function ItemCard({ item, onMarkPurchased }: ItemCardProps) {
     : [];
 
   return (
-    <div className="overflow-hidden rounded-lg bg-white border border-gray-200">
+    <div
+      className="overflow-hidden rounded-lg bg-white shadow transition-shadow hover:shadow-md"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
       <div className="relative">
         {/* Item Image */}
         <img
           src={item.imageUrl}
           alt={item.name}
-          className="h-64 w-full object-cover"
+          className="h-48 w-full object-cover"
         />
 
         {/* Status Badge */}
-        {isFullyPurchased && (
-          <div className="absolute top-2 left-2">
-            <span className="inline-flex items-center rounded-md bg-white px-2 py-1 text-xs font-medium text-green-600">
+        <div className="absolute top-2 left-2 rounded-md bg-white px-2 py-1 text-xs font-medium">
+          {isFullyPurchased ? (
+            <span className="flex items-center text-green-600">
               <svg
                 className="mr-1 h-3 w-3"
                 viewBox="0 0 20 20"
@@ -73,20 +80,20 @@ export default function ItemCard({ item, onMarkPurchased }: ItemCardProps) {
               </svg>
               Purchased
             </span>
-          </div>
-        )}
+          ) : (
+            <span>Available</span>
+          )}
+        </div>
 
         {/* Category Badge */}
-        <div className="absolute top-2 right-2 rounded-md bg-gray-800 bg-opacity-75 px-2 py-1 text-xs font-medium text-white">
+        <div className="absolute top-2 right-2 rounded-md bg-blue-500 px-2 py-1 text-xs font-medium text-white">
           {item.category}
         </div>
 
         {/* Quantity Badge */}
-        {!isFullyPurchased && (
-          <div className="absolute bottom-2 right-2 rounded-md bg-black px-2 py-1 text-xs font-medium text-white">
-            Qty: {remainingQuantity}
-          </div>
-        )}
+        <div className="absolute bottom-2 right-2 rounded-md bg-gray-800 bg-opacity-75 px-2 py-1 text-xs font-medium text-white">
+          Qty: {isFullyPurchased ? "0" : remainingQuantity}
+        </div>
       </div>
 
       <div className="p-4">
@@ -94,33 +101,58 @@ export default function ItemCard({ item, onMarkPurchased }: ItemCardProps) {
 
         {item.description && (
           <p className="mb-2 text-sm text-gray-600">
-            {item.description.length > 80
-              ? `${item.description.substring(0, 80)}...`
+            {item.description.length > 100
+              ? `${item.description.substring(0, 100)}...`
               : item.description}
           </p>
         )}
 
         {item.price && (
-          <p className="mb-3 text-lg font-medium text-gray-900">
+          <p className="mb-3 text-lg font-semibold text-gray-900">
             ${item.price.toFixed(2)}
           </p>
         )}
 
-        {isFullyPurchased ? (
-          <button
-            disabled
-            className="w-full rounded-md bg-gray-100 py-2 px-4 text-center text-sm font-medium text-gray-500"
-          >
-            Already Purchased
-          </button>
-        ) : (
-          <button
-            onClick={() => onMarkPurchased(item.id)}
-            className="w-full rounded-md bg-gray-100 py-2 px-4 text-center text-sm font-medium text-gray-700 hover:bg-gray-200"
-          >
-            Mark as Purchased
-          </button>
-        )}
+        {/* Purchase Links */}
+        <div className="mb-4 space-y-2">
+          {item.purchaseLinks.map((link) => (
+            <a
+              key={link.id}
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-center rounded-md bg-blue-500 py-2 px-4 text-sm font-medium text-white hover:bg-blue-600"
+            >
+              <svg
+                className="mr-1 h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                />
+              </svg>
+              Buy on {link.label}
+            </a>
+          ))}
+        </div>
+
+        {/* Mark as Purchased Button */}
+        <button
+          onClick={() => onMarkPurchased(item.id)}
+          disabled={isFullyPurchased}
+          className={`w-full rounded-md py-2 px-4 text-center text-sm font-medium ${
+            isFullyPurchased
+              ? "cursor-not-allowed bg-gray-200 text-gray-500"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+          }`}
+        >
+          {isFullyPurchased ? "Already Purchased" : "Mark as Purchased"}
+        </button>
 
         {/* Buyer Names (if fully purchased) */}
         {isFullyPurchased && buyerNames.length > 0 && (

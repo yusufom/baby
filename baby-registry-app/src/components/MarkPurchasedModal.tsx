@@ -3,20 +3,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-interface Purchase {
-  id: string;
-  name: string;
-  message?: string;
-  quantity: number;
-  itemId: string;
-}
-
 interface RegistryItem {
   id: string;
   name: string;
   imageUrl: string;
   quantity: number;
-  purchases: Purchase[];
+  purchases: any[];
 }
 
 interface MarkPurchasedModalProps {
@@ -96,7 +88,7 @@ export default function MarkPurchasedModal({
         className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-gray-800">
             Mark as Purchased
           </h2>
           <button
@@ -136,7 +128,7 @@ export default function MarkPurchasedModal({
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+              className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
             />
           </div>
@@ -151,7 +143,7 @@ export default function MarkPurchasedModal({
               onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
               min="1"
               max={maxQuantity}
-              className="w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+              className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               required
             />
           </div>
@@ -164,7 +156,7 @@ export default function MarkPurchasedModal({
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows={3}
-              className="w-full rounded-md border border-gray-300 p-2 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
+              className="w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               placeholder="Add a personal message..."
             />
           </div>
@@ -180,7 +172,7 @@ export default function MarkPurchasedModal({
             <button
               type="submit"
               disabled={loading}
-              className="rounded-md bg-gray-900 px-4 py-2 text-white hover:bg-gray-800 disabled:bg-gray-400"
+              className="rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:bg-blue-300"
             >
               {loading ? "Submitting..." : "Mark as Purchased"}
             </button>

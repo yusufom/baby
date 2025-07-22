@@ -114,7 +114,7 @@ export const useCreateItem = () => {
         mutationFn: createItem,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['items'] });
-        }
+        },
     });
 };
 
@@ -126,7 +126,7 @@ export const useUpdateItem = () => {
         mutationFn: updateItem,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['items'] });
-        }
+        },
     });
 };
 
@@ -138,7 +138,7 @@ export const useDeleteItem = () => {
         mutationFn: deleteItem,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['items'] });
-        }
+        },
     });
 };
 
@@ -150,6 +150,6 @@ export const useMarkItemPurchased = () => {
         mutationFn: markItemPurchased,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['items'] });
-        }
+        },
     });
 }; 
