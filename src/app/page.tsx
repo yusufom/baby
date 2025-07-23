@@ -5,6 +5,7 @@ import ItemCard from "@/components/ItemCard";
 import MarkPurchasedModal from "@/components/MarkPurchasedModal";
 import { motion } from "framer-motion";
 import { useItems, useMarkItemPurchased } from "@/hooks/useItems";
+import Image from "next/image";
 
 interface PurchaseLink {
   id: string;
@@ -32,6 +33,7 @@ interface RegistryItem {
   purchaseLinks: PurchaseLink[];
   purchases: Purchase[];
   createdAt: string;
+  priority?: "high" | "medium" | "low";
 }
 
 // Sample data for testing
@@ -181,6 +183,14 @@ const categories = [
   "Other",
 ];
 
+// Sort options
+const sortOptions = [
+  { value: "latest", label: "Latest" },
+  { value: "price-high", label: "Price: High to Low" },
+  { value: "price-low", label: "Price: Low to High" },
+  { value: "priority", label: "Priority" },
+];
+
 export default function Home() {
   const { data: items = [], isLoading, error: queryError } = useItems();
   const markPurchasedMutation = useMarkItemPurchased();
@@ -191,13 +201,14 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showPurchasedModal, setShowPurchasedModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<RegistryItem | null>(null);
+  const [sortBy, setSortBy] = useState("latest");
 
   useEffect(() => {
-    // Filter items when search term or category changes
-    filterItems();
-  }, [items, searchTerm, selectedCategory]);
+    // Filter and sort items when search term, category, or sort option changes
+    filterAndSortItems();
+  }, [items, searchTerm, selectedCategory, sortBy]);
 
-  const filterItems = () => {
+  const filterAndSortItems = () => {
     let filtered = [...items];
 
     // Filter by category
@@ -215,7 +226,32 @@ export default function Home() {
       );
     }
 
+    // Sort items
+    filtered = sortItems(filtered, sortBy);
+
     setFilteredItems(filtered);
+  };
+
+  const sortItems = (items: RegistryItem[], sortOption: string) => {
+    switch (sortOption) {
+      case "price-high":
+        return [...items].sort((a, b) => (b.price || 0) - (a.price || 0));
+      case "price-low":
+        return [...items].sort((a, b) => (a.price || 0) - (b.price || 0));
+      case "priority":
+        return [...items].sort((a, b) => {
+          const priorityOrder = { high: 1, medium: 2, low: 3 };
+          const aPriority = a.priority ? priorityOrder[a.priority] : 4;
+          const bPriority = b.priority ? priorityOrder[b.priority] : 4;
+          return aPriority - bPriority;
+        });
+      case "latest":
+      default:
+        return [...items].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+    }
   };
 
   const handleMarkPurchased = (itemId: string) => {
@@ -272,21 +308,22 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="border-b border-gray-200">
+      <header className="border-b border-gray-200 gradient-header">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div>
+            <div className="flex items-center gap-2">
+              <Image src="/images/crib.png" alt="Hannah" width={25} height={25} />
               <h1 className="text-2xl font-semibold text-gray-800">
                 Hannah&apos;s Baby Registry
               </h1>
-              <p className="text-sm text-gray-500">Due March 2024</p>
+              {/* <p className="text-sm text-gray-500">Due March 2024</p> */}
             </div>
-            <a
+            {/* <a
               href="/admin/login"
               className="text-sm text-gray-600 hover:underline"
             >
               Admin
-            </a>
+            </a> */}
           </div>
         </div>
       </header>
@@ -295,6 +332,25 @@ export default function Home() {
       <div className="border-b border-gray-200 bg-white py-4">
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            
+
+            {/* Category Filters */}
+            <div className="flex flex-wrap gap-2">
+              {categories.slice(0, 6).map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${
+                    selectedCategory === category
+                      ? "gradient-primary text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+
             <div className="relative w-full max-w-md">
               <input
                 type="text"
@@ -319,21 +375,26 @@ export default function Home() {
               </svg>
             </div>
 
-            {/* Category Filters */}
-            <div className="flex flex-wrap gap-2">
-              {categories.slice(0, 6).map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${
-                    selectedCategory === category
-                      ? "bg-blue-100 text-blue-800"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  }`}
-                >
-                  {category}
-                </button>
-              ))}
+            {/* Sort Options */}
+            <div className=" flex items-center">
+              <span className="mr-3 text-sm font-medium text-gray-700">
+                Sort:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {sortOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => setSortBy(option.value)}
+                    className={`rounded-md px-3 py-1 text-sm font-medium transition-colors ${
+                      sortBy === option.value
+                        ? "gradient-secondary text-gray-800"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -417,7 +478,7 @@ export default function Home() {
         )}
 
         {filteredItems.length === 0 ? (
-          <div className="flex h-40 items-center justify-center rounded-lg bg-white p-6 shadow">
+          <div className="flex h-40 items-center justify-center rounded-lg gradient-card p-6 shadow">
             <p className="text-gray-500">
               {searchTerm || selectedCategory !== "All"
                 ? "No items match your search or filter criteria."
@@ -427,11 +488,14 @@ export default function Home() {
         ) : (
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {filteredItems.map((item) => (
-              <ItemCard
+              <motion.div
                 key={item.id}
-                item={item}
-                onMarkPurchased={handleMarkPurchased}
-              />
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ItemCard item={item} onMarkPurchased={handleMarkPurchased} />
+              </motion.div>
             ))}
           </div>
         )}

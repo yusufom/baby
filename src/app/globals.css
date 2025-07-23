@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --input-background: #ffffff;
+  --input-text: #333333;
+  --input-placeholder: #555555;
+  --input-border: #aaaaaa;
+  --input-focus-border: #4a6cf7;
+  --input-focus-ring: rgba(74, 108, 247, 0.5);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-baby-purple: "#9D4EDD";
+  --color-baby-pink: "#FF8FAB";
+  --color-baby-blue: "#90E0EF";
+  --color-baby-mint: "#B5E48C";
+  --color-baby-yellow: "#FFEA00";
+  --color-baby-peach: "#FFB5A7";
+  --color-baby-lavender: "#C8B6FF";
+  --color-baby-dark: "#6A4C93";
+  --color-baby-light: "#F8EDEB";
+  --color-baby-primary: "#9D4EDD";
+  --color-baby-secondary: "#B5E48C";
+  --color-baby-accent: "#FFB5A7";
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+}
+
+/* Background accent elements */
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  right: -50%;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(157, 78, 221, 0.1) 0%,
+    rgba(255, 143, 171, 0.05) 60%,
+    transparent 70%
+  );
+  z-index: -1;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  bottom: -40%;
+  left: -30%;
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(144, 224, 239, 0.1) 0%,
+    rgba(181, 228, 140, 0.05) 60%,
+    transparent 70%
+  );
+  z-index: -1;
+}
+
+/* Gradient backgrounds */
+.gradient-primary {
+  background: linear-gradient(135deg, #9d4edd 0%, #c8b6ff 100%);
+}
+
+.gradient-secondary {
+  background: linear-gradient(135deg, #90e0ef 0%, #b5e48c 100%);
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, #ff8fab 0%, #ffb5a7 100%);
+}
+
+.gradient-card {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(248, 237, 235, 0.95) 100%
+  );
+}
+
+.gradient-header {
+  background: linear-gradient(
+    90deg,
+    rgba(157, 78, 221, 0.1) 0%,
+    rgba(200, 182, 255, 0.1) 100%
+  );
+}
+
+.gradient-button {
+  background: linear-gradient(135deg, #9d4edd 0%, #6a4c93 100%);
+  transition: all 0.3s ease;
+}
+
+.gradient-button:hover {
+  background: linear-gradient(135deg, #8a3dcb 0%, #5a3b83 100%);
+  box-shadow: 0 4px 12px rgba(157, 78, 221, 0.2);
+}
+
+/* Improved input styling with better contrast */
+input,
+textarea,
+select {
+  background-color: var(--input-background);
+  color: var(--input-text);
+  border-color: var(--input-border);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--input-placeholder);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--input-focus-border);
+  box-shadow: 0 0 0 2px var(--input-focus-ring);
+  outline: none;
+}
+
+/* Improved contrast for text elements */
+.text-gray-500 {
+  color: #646464;
+}
+
+.text-gray-600 {
+  color: #525252;
+}
+
+.text-gray-700 {
+  color: #404040;
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}

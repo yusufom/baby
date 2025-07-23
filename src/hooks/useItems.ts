@@ -15,6 +15,7 @@ interface RegistryItem {
     category: string;
     imageUrl: string;
     purchaseLinks: PurchaseLink[];
+    priority?: 'high' | 'medium' | 'low';
 }
 
 interface PurchaseData {
