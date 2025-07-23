@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import Image from "next/image";
 
 interface PurchaseLink {
   id: string;
@@ -59,17 +59,19 @@ export default function ItemCard({ item, onMarkPurchased }: ItemCardProps) {
 
   return (
     <div
-      className="overflow-hidden rounded-lg gradient-card shadow transition-shadow hover:shadow-md card-hover"
+      className="overflow-hidden rounded-lg gradient-card shadow transition-shadow hover:shadow-md card-hover h-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative">
         {/* Item Image */}
-        <div className="">
-          <img
+        <div className="h-[300px]">
+          <Image
             src={item.imageUrl}
             alt={item.name}
-            className="h-[80px] w-[30px] object-cover"
+            className="h-full w-full object-contain"
+            fill={true}
+            // layout="responsive"
           />
         </div>
 
@@ -144,7 +146,7 @@ export default function ItemCard({ item, onMarkPurchased }: ItemCardProps) {
         </div>
 
         {/* Purchase Links */}
-        <div className="mb-4 space-y-2 h-[100px]">
+        <div className="mb-4 space-y-2 ">
           {item.purchaseLinks.map((link) => (
             <a
               key={link.id}
@@ -185,14 +187,10 @@ export default function ItemCard({ item, onMarkPurchased }: ItemCardProps) {
         </button>
 
         {/* Buyer Names (if fully purchased) */}
-        {isFullyPurchased && buyerNames.length > 0 ? (
+        {isFullyPurchased && buyerNames.length > 0 && (
           <div className="mt-2 text-xs text-gray-700">
             <span className="font-medium">Purchased by: </span>
             {buyerNames.join(", ")}
-          </div>
-        ) : (
-          <div className="mt-2 text-xs text-gray-700">
-            <p className="pt-4"> </p>
           </div>
         )}
       </div>

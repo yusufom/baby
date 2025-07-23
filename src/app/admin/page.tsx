@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import ItemFormModal from "@/components/ItemFormModal";
 import {
   useItems,
@@ -9,6 +10,8 @@ import {
   useUpdateItem,
   useDeleteItem,
 } from "@/hooks/useItems";
+import Image from "next/image";
+import Link from "next/link";
 
 interface PurchaseLink {
   id: string;
@@ -49,14 +52,14 @@ export default function AdminDashboard() {
   const [editingItem, setEditingItem] = useState<RegistryItem | undefined>(
     undefined
   );
-  const router = useRouter();
+  // const router = useRouter();
 
   // Stats
   const totalItems = items.length;
-  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+  const totalQuantity = items.reduce((sum: any, item: any) => sum + item.quantity, 0);
   const purchasedQuantity = items.reduce(
-    (sum, item) =>
-      sum + item.purchases.reduce((pSum, p) => pSum + p.quantity, 0),
+    (sum: any, item: any) =>
+      sum + item.purchases.reduce((pSum: any, p: any) => pSum + p.quantity, 0),
     0
   );
 
@@ -171,9 +174,9 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {items.map((item) => {
+              {items.map((item: any) => {
                 const purchasedQty = item.purchases.reduce(
-                  (sum, p) => sum + p.quantity,
+                  (sum: any, p: any) => sum + p.quantity,
                   0
                 );
                 const remainingQty = item.quantity - purchasedQty;
@@ -182,10 +185,11 @@ export default function AdminDashboard() {
                   <tr key={item.id}>
                     <td className="whitespace-nowrap px-6 py-4">
                       <div className="flex items-center">
-                        <img
+                        <Image
                           src={item.imageUrl}
                           alt={item.name}
                           className="h-10 w-10 rounded-full object-cover"
+                          fill={true}
                         />
                         <div className="ml-4">
                           <div className="font-medium text-gray-900">
@@ -260,9 +264,9 @@ export default function AdminDashboard() {
         />
 
         <div className="mt-4 text-center">
-          <a href="/" className="text-sm text-pink-500 hover:underline">
+          <Link href="/" className="text-sm text-pink-500 hover:underline">
             View Public Registry
-          </a>
+          </Link>
         </div>
       </div>
     </div>

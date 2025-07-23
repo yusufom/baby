@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -32,7 +33,8 @@ export default function AdminLogin() {
 
       // Redirect to admin dashboard on success
       router.push("/admin");
-    } catch (err: any) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any | undefined) {
       setError(err.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
@@ -97,9 +99,9 @@ export default function AdminLogin() {
         </form>
 
         <div className="mt-4 text-center text-sm text-gray-600">
-          <a href="/" className="text-pink-500 hover:underline">
+          <Link href="/" className="text-pink-500 hover:underline">
             Return to Registry
-          </a>
+          </Link>
         </div>
       </div>
     </div>

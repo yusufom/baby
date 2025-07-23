@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 
@@ -40,14 +41,14 @@ export function validateAdminCredentials(email: string, password: string) {
 }
 
 // Get token from cookies
-export function getTokenFromCookies() {
-    const cookieStore = cookies();
+export async function getTokenFromCookies() {
+    const cookieStore = await cookies();
     return cookieStore.get('admin-token')?.value;
 }
 
 // Verify if user is authenticated
 export async function isAuthenticated() {
-    const token = getTokenFromCookies();
+    const token = await getTokenFromCookies();
 
     if (!token) {
         return false;

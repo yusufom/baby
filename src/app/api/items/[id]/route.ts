@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
-interface RouteParams {
-    params: {
-        id: string;
-    };
-}
+// interface RouteParams {
+//     params: {
+//         id: string;
+//     };
+// }
 
 // GET a single item by ID
-export async function GET(request: Request, { params }: RouteParams) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         const item = await prisma.registryItem.findUnique({
             where: { id },
@@ -38,9 +38,9 @@ export async function GET(request: Request, { params }: RouteParams) {
 }
 
 // PATCH (update) an item
-export async function PATCH(request: Request, { params }: RouteParams) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = params;
+        const { id } = await params;
         const body = await request.json();
         const { name, description, price, quantity, category, imageUrl, purchaseLinks } = body;
 
@@ -57,7 +57,7 @@ export async function PATCH(request: Request, { params }: RouteParams) {
         }
 
         // Update the item
-        const updatedItem = await prisma.registryItem.update({
+         await prisma.registryItem.update({
             where: { id },
             data: {
                 name: name !== undefined ? name : undefined,
@@ -112,9 +112,9 @@ export async function PATCH(request: Request, { params }: RouteParams) {
 }
 
 // DELETE an item
-export async function DELETE(request: Request, { params }: RouteParams) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         // Check if item exists
         const existingItem = await prisma.registryItem.findUnique({

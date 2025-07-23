@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ItemCard from "@/components/ItemCard";
 import MarkPurchasedModal from "@/components/MarkPurchasedModal";
 import { motion } from "framer-motion";
@@ -37,138 +37,138 @@ interface RegistryItem {
 }
 
 // Sample data for testing
-const sampleItems: RegistryItem[] = [
-  {
-    id: "1",
-    name: "Modern Baby Crib",
-    description: "Beautiful white wooden crib with adjustable mattress height",
-    price: 299.99,
-    quantity: 1,
-    category: "Nursery",
-    imageUrl:
-      "https://images.unsplash.com/photo-1586370434639-0fe43b4daa6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmFieSUyMGNyaWJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-    purchaseLinks: [
-      { id: "1", label: "Amazon", url: "https://amazon.com", itemId: "1" },
-      { id: "2", label: "Target", url: "https://target.com", itemId: "1" },
-    ],
-    purchases: [],
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "2",
-    name: "Organic Cotton Onesies Set",
-    description: "Pack of 5 organic cotton onesies in size 0-3 months",
-    price: 24.99,
-    quantity: 3,
-    category: "Clothes",
-    imageUrl:
-      "https://images.unsplash.com/photo-1586370434639-0fe43b4daa6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmFieSUyMGNyaWJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-    purchaseLinks: [
-      { id: "3", label: "Amazon", url: "https://amazon.com", itemId: "2" },
-    ],
-    purchases: [],
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "3",
-    name: "Adjustable High Chair",
-    description: "Modern wooden high chair that grows with your baby",
-    price: 179.99,
-    quantity: 1,
-    category: "Feeding",
-    imageUrl:
-      "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGhpZ2glMjBjaGFpcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-    purchaseLinks: [
-      { id: "4", label: "Amazon", url: "https://amazon.com", itemId: "3" },
-      { id: "5", label: "Walmart", url: "https://walmart.com", itemId: "3" },
-    ],
-    purchases: [],
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "4",
-    name: "Baby Carrier",
-    description: "Ergonomic baby carrier with multiple carrying positions",
-    price: 89.99,
-    quantity: 2,
-    category: "Travel",
-    imageUrl:
-      "https://images.unsplash.com/photo-1586370434639-0fe43b4daa6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmFieSUyMGNyaWJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-    purchaseLinks: [
-      { id: "6", label: "Amazon", url: "https://amazon.com", itemId: "4" },
-    ],
-    purchases: [],
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "5",
-    name: "Soft Play Mat",
-    description: "Non-toxic foam play mat with colorful design",
-    price: 49.99,
-    quantity: 1,
-    category: "Toys",
-    imageUrl:
-      "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGhpZ2glMjBjaGFpcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-    purchaseLinks: [
-      { id: "7", label: "Amazon", url: "https://amazon.com", itemId: "5" },
-    ],
-    purchases: [],
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "6",
-    name: "Changing Table",
-    description: "Wooden changing table with storage drawers",
-    price: 149.99,
-    quantity: 1,
-    category: "Nursery",
-    imageUrl:
-      "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGhpZ2glMjBjaGFpcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-    purchaseLinks: [
-      { id: "8", label: "Amazon", url: "https://amazon.com", itemId: "6" },
-    ],
-    purchases: [],
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "7",
-    name: "Smart Baby Monitor",
-    description: "HD video monitor with night vision and two-way audio",
-    price: 129.99,
-    quantity: 1,
-    category: "Nursery",
-    imageUrl:
-      "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGhpZ2glMjBjaGFpcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
-    purchaseLinks: [
-      { id: "9", label: "Amazon", url: "https://amazon.com", itemId: "7" },
-    ],
-    purchases: [
-      {
-        id: "1",
-        name: "John & Sarah",
-        message: "Congrats on your baby!",
-        quantity: 1,
-        itemId: "7",
-      },
-    ],
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "8",
-    name: "Baby Bottle Set",
-    description: "Set of 4 BPA-free baby bottles",
-    price: 34.99,
-    quantity: 1,
-    category: "Feeding",
-    imageUrl:
-      "https://images.unsplash.com/photo-1586370434639-0fe43b4daa6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmFieSUyMGNyaWJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
-    purchaseLinks: [
-      { id: "10", label: "Amazon", url: "https://amazon.com", itemId: "8" },
-    ],
-    purchases: [],
-    createdAt: new Date().toISOString(),
-  },
-];
+// const sampleItems: RegistryItem[] = [
+//   {
+//     id: "1",
+//     name: "Modern Baby Crib",
+//     description: "Beautiful white wooden crib with adjustable mattress height",
+//     price: 299.99,
+//     quantity: 1,
+//     category: "Nursery",
+//     imageUrl:
+//       "https://images.unsplash.com/photo-1586370434639-0fe43b4daa6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmFieSUyMGNyaWJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+//     purchaseLinks: [
+//       { id: "1", label: "Amazon", url: "https://amazon.com", itemId: "1" },
+//       { id: "2", label: "Target", url: "https://target.com", itemId: "1" },
+//     ],
+//     purchases: [],
+//     createdAt: new Date().toISOString(),
+//   },
+//   {
+//     id: "2",
+//     name: "Organic Cotton Onesies Set",
+//     description: "Pack of 5 organic cotton onesies in size 0-3 months",
+//     price: 24.99,
+//     quantity: 3,
+//     category: "Clothes",
+//     imageUrl:
+//       "https://images.unsplash.com/photo-1586370434639-0fe43b4daa6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmFieSUyMGNyaWJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+//     purchaseLinks: [
+//       { id: "3", label: "Amazon", url: "https://amazon.com", itemId: "2" },
+//     ],
+//     purchases: [],
+//     createdAt: new Date().toISOString(),
+//   },
+//   {
+//     id: "3",
+//     name: "Adjustable High Chair",
+//     description: "Modern wooden high chair that grows with your baby",
+//     price: 179.99,
+//     quantity: 1,
+//     category: "Feeding",
+//     imageUrl:
+//       "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGhpZ2glMjBjaGFpcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+//     purchaseLinks: [
+//       { id: "4", label: "Amazon", url: "https://amazon.com", itemId: "3" },
+//       { id: "5", label: "Walmart", url: "https://walmart.com", itemId: "3" },
+//     ],
+//     purchases: [],
+//     createdAt: new Date().toISOString(),
+//   },
+//   {
+//     id: "4",
+//     name: "Baby Carrier",
+//     description: "Ergonomic baby carrier with multiple carrying positions",
+//     price: 89.99,
+//     quantity: 2,
+//     category: "Travel",
+//     imageUrl:
+//       "https://images.unsplash.com/photo-1586370434639-0fe43b4daa6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmFieSUyMGNyaWJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+//     purchaseLinks: [
+//       { id: "6", label: "Amazon", url: "https://amazon.com", itemId: "4" },
+//     ],
+//     purchases: [],
+//     createdAt: new Date().toISOString(),
+//   },
+//   {
+//     id: "5",
+//     name: "Soft Play Mat",
+//     description: "Non-toxic foam play mat with colorful design",
+//     price: 49.99,
+//     quantity: 1,
+//     category: "Toys",
+//     imageUrl:
+//       "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGhpZ2glMjBjaGFpcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+//     purchaseLinks: [
+//       { id: "7", label: "Amazon", url: "https://amazon.com", itemId: "5" },
+//     ],
+//     purchases: [],
+//     createdAt: new Date().toISOString(),
+//   },
+//   {
+//     id: "6",
+//     name: "Changing Table",
+//     description: "Wooden changing table with storage drawers",
+//     price: 149.99,
+//     quantity: 1,
+//     category: "Nursery",
+//     imageUrl:
+//       "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGhpZ2glMjBjaGFpcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+//     purchaseLinks: [
+//       { id: "8", label: "Amazon", url: "https://amazon.com", itemId: "6" },
+//     ],
+//     purchases: [],
+//     createdAt: new Date().toISOString(),
+//   },
+//   {
+//     id: "7",
+//     name: "Smart Baby Monitor",
+//     description: "HD video monitor with night vision and two-way audio",
+//     price: 129.99,
+//     quantity: 1,
+//     category: "Nursery",
+//     imageUrl:
+//       "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTB8fGhpZ2glMjBjaGFpcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+//     purchaseLinks: [
+//       { id: "9", label: "Amazon", url: "https://amazon.com", itemId: "7" },
+//     ],
+//     purchases: [
+//       {
+//         id: "1",
+//         name: "John & Sarah",
+//         message: "Congrats on your baby!",
+//         quantity: 1,
+//         itemId: "7",
+//       },
+//     ],
+//     createdAt: new Date().toISOString(),
+//   },
+//   {
+//     id: "8",
+//     name: "Baby Bottle Set",
+//     description: "Set of 4 BPA-free baby bottles",
+//     price: 34.99,
+//     quantity: 1,
+//     category: "Feeding",
+//     imageUrl:
+//       "https://images.unsplash.com/photo-1586370434639-0fe43b4daa6d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8YmFieSUyMGNyaWJ8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+//     purchaseLinks: [
+//       { id: "10", label: "Amazon", url: "https://amazon.com", itemId: "8" },
+//     ],
+//     purchases: [],
+//     createdAt: new Date().toISOString(),
+//   },
+// ];
 
 // Available categories for filtering
 const categories = [
@@ -203,12 +203,31 @@ export default function Home() {
   const [selectedItem, setSelectedItem] = useState<RegistryItem | null>(null);
   const [sortBy, setSortBy] = useState("latest");
 
+  const sortItems = useCallback((items: RegistryItem[], sortOption: string) => {
+    switch (sortOption) {
+      case "price-high":
+        return [...items].sort((a, b) => (b.price || 0) - (a.price || 0));
+      case "price-low":
+        return [...items].sort((a, b) => (a.price || 0) - (b.price || 0));
+      case "priority":
+        return [...items].sort((a, b) => {
+          const priorityOrder = { high: 1, medium: 2, low: 3 };
+          const aPriority = a.priority ? priorityOrder[a.priority] : 4;
+          const bPriority = b.priority ? priorityOrder[b.priority] : 4;
+          return aPriority - bPriority;
+        });
+      case "latest":
+      default:
+        return [...items].sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+    }
+  }, []);
+
   useEffect(() => {
     // Filter and sort items when search term, category, or sort option changes
-    filterAndSortItems();
-  }, [items, searchTerm, selectedCategory, sortBy]);
 
-  const filterAndSortItems = () => {
     let filtered = [...items];
 
     // Filter by category
@@ -230,29 +249,7 @@ export default function Home() {
     filtered = sortItems(filtered, sortBy);
 
     setFilteredItems(filtered);
-  };
-
-  const sortItems = (items: RegistryItem[], sortOption: string) => {
-    switch (sortOption) {
-      case "price-high":
-        return [...items].sort((a, b) => (b.price || 0) - (a.price || 0));
-      case "price-low":
-        return [...items].sort((a, b) => (a.price || 0) - (b.price || 0));
-      case "priority":
-        return [...items].sort((a, b) => {
-          const priorityOrder = { high: 1, medium: 2, low: 3 };
-          const aPriority = a.priority ? priorityOrder[a.priority] : 4;
-          const bPriority = b.priority ? priorityOrder[b.priority] : 4;
-          return aPriority - bPriority;
-        });
-      case "latest":
-      default:
-        return [...items].sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-    }
-  };
+  }, [items, searchTerm, selectedCategory, sortBy, sortItems]);
 
   const handleMarkPurchased = (itemId: string) => {
     const item = items.find((item: RegistryItem) => item.id === itemId);
@@ -278,6 +275,7 @@ export default function Home() {
       // Close the modal
       setShowPurchasedModal(false);
       setSelectedItem(null);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       throw new Error(err.message || "Failed to mark item as purchased");
     }
@@ -312,7 +310,12 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Image src="/images/crib.png" alt="Hannah" width={25} height={25} />
+              <Image
+                src="/images/crib.png"
+                alt="Hannah"
+                width={25}
+                height={25}
+              />
               <h1 className="text-2xl font-semibold text-gray-800">
                 Hannah&apos;s Baby Registry
               </h1>
@@ -332,8 +335,6 @@ export default function Home() {
       <div className="border-b border-gray-200 bg-white py-4">
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            
-
             {/* Category Filters */}
             <div className="flex flex-wrap gap-2">
               {categories.slice(0, 6).map((category) => (
@@ -407,17 +408,6 @@ export default function Home() {
             <div className="flex items-center gap-2">
               <span className="text-gray-600">Total Items</span>
               <span className="font-semibold text-gray-900">{totalItems}</span>
-              <svg
-                className="h-5 w-5 text-gray-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
             </div>
 
             <div className="flex items-center gap-4">
@@ -486,7 +476,7 @@ export default function Home() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 auto-rows-[1fr]">
             {filteredItems.map((item) => (
               <motion.div
                 key={item.id}
