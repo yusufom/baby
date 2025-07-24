@@ -314,8 +314,8 @@ export default function Home() {
       {/* Header */}
       <header className="border-b border-gray-200 gradient-header">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center md:justify-between justify-center">
+            <div className="flex items-center  gap-2">
               <Image
                 src="/images/crib.png"
                 alt="Hannah"
@@ -342,7 +342,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             {/* Category Filters */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 order-2 md:order-1">
               {categories.slice(0, 6).map((category) => (
                 <button
                   key={category}
@@ -358,7 +358,7 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="relative w-full max-w-md">
+            <div className="relative w-full max-w-md order-1 md:order-2">
               <input
                 type="text"
                 value={searchTerm}
@@ -383,7 +383,7 @@ export default function Home() {
             </div>
 
             {/* Sort Options */}
-            <div className=" flex items-center">
+            <div className=" flex md:items-center items-start order-3">
               <span className="mr-3 text-sm font-medium text-gray-700">
                 Sort:
               </span>
