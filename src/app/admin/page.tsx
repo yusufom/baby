@@ -192,9 +192,9 @@ export default function AdminDashboard() {
 
                 return (
                   <tr key={item.id}>
-                    <td className="whitespace-nowrap px-6 py-4">
+                    <td className=" px-6 py-4 w-2/5">
                       <div className="flex items-center">
-                        <div className="h-10 w-10 relative">
+                        <div className="h-10 w-10 relative ">
                           <Image
                             src={item.imageUrl}
                             alt={item.name}
@@ -202,8 +202,8 @@ export default function AdminDashboard() {
                             fill={true}
                           />
                         </div>
-                        <div className="ml-4">
-                          <div className="font-medium text-gray-900">
+                        <div className="ml-4 w-2/3 ">
+                          <div className="font-medium text-gray-900 max-h-20 overflow-hidden text-ellipsis">
                             {item.name}
                           </div>
                           <div className="text-sm text-gray-500">
@@ -214,15 +214,15 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4">
+                    <td className=" px-6 py-4 w-1/5">
                       <span className="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-800">
                         {item.category}
                       </span>
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                    <td className=" px-6 py-4 text-sm text-gray-500 w-1/5">
                       {item.quantity}
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
+                    <td className=" px-6 py-4 text-sm text-gray-500 w-1/5">
                       <div className="flex flex-col">
                         <span>{purchasedQty} purchased</span>
                         <span
@@ -234,7 +234,7 @@ export default function AdminDashboard() {
                         </span>
                       </div>
                     </td>
-                    <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                    <td className=" px-6 py-4 text-right text-sm font-medium w-1/5">
                       <button
                         onClick={() => handleEdit(item)}
                         className="mr-2 text-indigo-600 hover:text-indigo-900"
