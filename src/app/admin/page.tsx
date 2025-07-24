@@ -56,7 +56,10 @@ export default function AdminDashboard() {
 
   // Stats
   const totalItems = items.length;
-  const totalQuantity = items.reduce((sum: any, item: any) => sum + item.quantity, 0);
+  const totalQuantity = items.reduce(
+    (sum: any, item: any) => sum + item.quantity,
+    0
+  );
   const purchasedQuantity = items.reduce(
     (sum: any, item: any) =>
       sum + item.purchases.reduce((pSum: any, p: any) => pSum + p.quantity, 0),
@@ -185,12 +188,14 @@ export default function AdminDashboard() {
                   <tr key={item.id}>
                     <td className="whitespace-nowrap px-6 py-4">
                       <div className="flex items-center">
-                        <Image
-                          src={item.imageUrl}
-                          alt={item.name}
-                          className="h-10 w-10 rounded-full object-cover"
-                          fill={true}
-                        />
+                        <div className="h-10 w-10 relative">
+                          <Image
+                            src={item.imageUrl}
+                            alt={item.name}
+                            className="h-10 w-10 rounded-full object-cover"
+                            fill={true}
+                          />
+                        </div>
                         <div className="ml-4">
                           <div className="font-medium text-gray-900">
                             {item.name}
