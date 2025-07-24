@@ -1,5 +1,6 @@
 import "./globals.css";
 import { QueryClientProvider } from "./providers";
+import '@mantine/core/styles.css';
 
 export const metadata = {
   title: "Baby Registry",

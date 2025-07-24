@@ -5,6 +5,7 @@ import {
   QueryClientProvider as ReactQueryProvider,
 } from "@tanstack/react-query";
 import { useState } from "react";
+import { MantineProvider } from "@mantine/core";
 
 export function QueryClientProvider({
   children,
@@ -14,6 +15,9 @@ export function QueryClientProvider({
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <ReactQueryProvider client={queryClient}>{children}</ReactQueryProvider>
+    <MantineProvider>
+      {/* Your app here */}
+      <ReactQueryProvider client={queryClient}>{children}</ReactQueryProvider>
+    </MantineProvider>
   );
 }

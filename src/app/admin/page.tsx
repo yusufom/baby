@@ -12,6 +12,7 @@ import {
 } from "@/hooks/useItems";
 import Image from "next/image";
 import Link from "next/link";
+import { LoadingOverlay } from "@mantine/core";
 
 interface PurchaseLink {
   id: string;
@@ -111,8 +112,13 @@ export default function AdminDashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
-        <p className="text-lg">Loading...</p>
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <LoadingOverlay
+          visible={true}
+          zIndex={1000}
+          overlayProps={{ radius: "sm", blur: 2 }}
+          loaderProps={{ color: "#9D4EDD", type: "bars" }}
+        />
       </div>
     );
   }
