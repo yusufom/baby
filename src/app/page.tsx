@@ -315,15 +315,15 @@ export default function Home() {
       <header className="border-b border-gray-200 gradient-header">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center md:justify-between justify-center">
-            <div className="flex items-center  gap-2">
+            <div className="flex md:items-center items-start  lg:gap-2">
               <Image
                 src="/images/crib.png"
                 alt="Hannah"
-                width={25}
-                height={25}
+                width={30}
+                height={30}
               />
-              <h1 className="text-2xl font-semibold text-gray-800">
-                Hannah&apos;s Baby Registry
+              <h1 className="text-2xl text-center lg:text-left font-semibold text-gray-800">
+                Baby Abiona&apos;s Baby Shower Gift List
               </h1>
               {/* <p className="text-sm text-gray-500">Due March 2024</p> */}
             </div>

@@ -208,7 +208,7 @@ export default function AdminDashboard() {
                           </div>
                           <div className="text-sm text-gray-500">
                             {item.price
-                              ? `$${item.price.toFixed(2)}`
+                              ? `£${item.price.toFixed(2)}`
                               : "No price"}
                           </div>
                         </div>

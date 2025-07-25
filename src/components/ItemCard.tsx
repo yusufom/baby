@@ -138,10 +138,10 @@ export default function ItemCard({ item, onMarkPurchased }: ItemCardProps) {
         <div className="h-[30px]">
           {item.price ? (
             <p className="mb-3 text-lg font-semibold text-gray-900">
-              ${item.price.toFixed(2)}
+              £{item.price.toFixed(2)}
             </p>
           ) : (
-            <p>$ --</p>
+            <p>£ --</p>
           )}
         </div>
 
