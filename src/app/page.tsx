@@ -197,6 +197,7 @@ export default function Home() {
   const markPurchasedMutation = useMarkItemPurchased();
 
   const [filteredItems, setFilteredItems] = useState<RegistryItem[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -323,7 +324,7 @@ export default function Home() {
                 height={30}
               />
               <h1 className="text-2xl text-center lg:text-left font-semibold text-gray-800">
-                Baby Abiona&apos;s Baby Shower Gift List
+                Hannah&apos;s baby shower gift list
               </h1>
               {/* <p className="text-sm text-gray-500">Due March 2024</p> */}
             </div>
