@@ -3,8 +3,8 @@ import { QueryClientProvider } from "./providers";
 import '@mantine/core/styles.css';
 
 export const metadata = {
-  title: "Baby Registry",
-  description: "A beautiful baby shower registry app",
+  title: "Hannah Baby Registry",
+  description: "Hannah's baby shower registry app",
 };
 
 export default function RootLayout({
