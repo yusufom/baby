@@ -46,9 +46,9 @@ export default function ItemCard({ item, onMarkPurchased }: ItemCardProps) {
   const isFullyPurchased = remainingQuantity === 0;
 
   // Get buyer names for fully purchased items
-  const buyerNames = isFullyPurchased
-    ? [...new Set(item.purchases.map((p) => p.name))]
-    : [];
+  // const buyerNames = isFullyPurchased
+  //   ? [...new Set(item.purchases.map((p) => p.name))]
+  //   : [];
 
   // Priority badge styling
   const priorityColors = {
@@ -187,12 +187,12 @@ export default function ItemCard({ item, onMarkPurchased }: ItemCardProps) {
         </button>
 
         {/* Buyer Names (if fully purchased) */}
-        {isFullyPurchased && buyerNames.length > 0 && (
+        {/* {isFullyPurchased && buyerNames.length > 0 && (
           <div className="mt-2 text-xs text-gray-700">
             <span className="font-medium">Purchased by: </span>
             {buyerNames.join(", ")}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
