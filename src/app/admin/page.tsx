@@ -177,6 +177,9 @@ export default function AdminDashboard() {
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                   Purchased
                 </th>
+                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  Purchased By
+                </th>
                 <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
                   Actions
                 </th>
@@ -190,9 +193,15 @@ export default function AdminDashboard() {
                 );
                 const remainingQty = item.quantity - purchasedQty;
 
+                const isFullyPurchased = remainingQty === 0;
+
+                const buyerNames = isFullyPurchased
+                  ? [...new Set(item.purchases.map((p: any) => p.name))]
+                  : [];
+
                 return (
                   <tr key={item.id}>
-                    <td className=" px-6 py-4 w-2/5">
+                    <td className=" px-6 py-4 w-2/6">
                       <div className="flex items-center">
                         <div className="h-10 w-10 relative ">
                           <Image
@@ -214,15 +223,15 @@ export default function AdminDashboard() {
                         </div>
                       </div>
                     </td>
-                    <td className=" px-6 py-4 w-1/5">
+                    <td className=" px-6 py-4 w-1/6">
                       <span className="inline-flex rounded-full bg-blue-100 px-2 text-xs font-semibold leading-5 text-blue-800">
                         {item.category}
                       </span>
                     </td>
-                    <td className=" px-6 py-4 text-sm text-gray-500 w-1/5">
+                    <td className=" px-6 py-4 text-sm text-gray-500 w-1/6">
                       {item.quantity}
                     </td>
-                    <td className=" px-6 py-4 text-sm text-gray-500 w-1/5">
+                    <td className=" px-6 py-4 text-sm text-gray-500 w-1/6">
                       <div className="flex flex-col">
                         <span>{purchasedQty} purchased</span>
                         <span
@@ -234,7 +243,16 @@ export default function AdminDashboard() {
                         </span>
                       </div>
                     </td>
-                    <td className=" px-6 py-4 text-right text-sm font-medium w-1/5">
+                    <td className=" px-6 py-4 text-left text-sm font-medium w-1/6">
+                      {(isFullyPurchased && buyerNames.length > 0) ? (
+                        <div className="mt-2 text-xs text-gray-700">
+                          {buyerNames.join(", ")}
+                        </div>
+                      ): (
+                        <span className="text-gray-500">-</span>
+                      )}
+                    </td>
+                    <td className=" px-6 py-4 text-right text-sm font-medium w-1/6">
                       <button
                         onClick={() => handleEdit(item)}
                         className="mr-2 text-indigo-600 hover:text-indigo-900"
